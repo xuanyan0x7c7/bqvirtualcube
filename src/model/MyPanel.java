@@ -2,6 +2,7 @@ package model;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,8 +33,9 @@ import thread.ThreadQueue;
 public class MyPanel extends JPanel implements KeyListener, MouseListener,
 		MouseMotionListener, MouseWheelListener {
 
-	private final int width = 600;
-	private final int height = 600;
+	private MyFrame frame;
+	private MyMenu menu;
+	private MyStatusBar statusbar;
 	static final Font default_font = new Font(null, Font.TRUETYPE_FONT, 24);
 	private BufferedImage buf;
 	private Graphics2D g2;
@@ -50,27 +52,24 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 
 	private List<Class<? extends Puzzle>> puzzle_list = new ArrayList<Class<? extends Puzzle>>();
 
-	public MyPanel() {
-		super();
-		setSize(width, height);
+	public MyPanel(MyFrame frame) {
+		this(frame, frame.size);
+	}
+
+	public MyPanel(MyFrame frame, Dimension size) {
+		this.frame = frame;
 		setFocusable(true);
 		addKeyListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
 		setLayout(null);
-		MyMenu menu = new MyMenu(this);
-		menu.setBounds(0, 0, width, 24);
+		menu = new MyMenu(this);
+		statusbar = new MyStatusBar();
+		myResize(size);
 		add(menu);
-		MyStatusBar statusbar = new MyStatusBar();
-		statusbar.setBounds((width - 300) / 2, 30, 300, 20);
 		add(statusbar);
 		setVisible(true);
-		buf = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		g2 = buf.createGraphics();
-		g2.translate(width / 2, height / 2);
-		g2.scale(width, -height);
-		g2.setStroke(new BasicStroke((float) 0.001));
 		timer = new MyTimer(statusbar);
 		puzzle_list.add(Cube.class);
 		puzzle_list.add(Pyraminx.class);
@@ -84,6 +83,46 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 		changePuzzle();
 	}
 
+	public void myResize(Dimension size) {
+		setSize(size);
+		int width = this.getWidth();
+		int height = this.getHeight();
+		menu.setBounds(0, 0, width, 24);
+		statusbar.setBounds((width - 300) / 2, 30, 300, 20);
+		buf = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		g2 = buf.createGraphics();
+		g2.translate(width / 2, height / 2);
+		double scale = Math.min(width, height);
+		g2.scale(scale, -scale);
+		g2.setStroke(new BasicStroke((float) 0.001));
+	}
+
+	private void toggleFullscreen() {
+		if (frame != null) {
+			Dimension size;
+			if (frame.fullscreen) {
+				frame.dispose();
+				frame.setUndecorated(false);
+				frame.setVisible(false);
+				frame.getGraphicsConfiguration().getDevice()
+						.setFullScreenWindow(null);
+				frame.setSize(size = frame.size);
+				frame.setLocation(frame.location);
+				frame.setVisible(true);
+				frame.fullscreen = false;
+			} else {
+				frame.dispose();
+				frame.setUndecorated(true);
+				frame.setVisible(false);
+				frame.getGraphicsConfiguration().getDevice()
+						.setFullScreenWindow(frame);
+				size = frame.getSize();
+				frame.fullscreen = true;
+			}
+			myResize(size);
+		}
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 		g2.setColor(Color.BLACK);
@@ -91,6 +130,8 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 		puzzle.draw(g2);
 		g.drawImage(buf, 0, 0, null);
 	}
+
+	private boolean alt_pressed = false;
 
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -172,6 +213,17 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 			changePuzzle();
 			timer.startInspection();
 			break;
+		case KeyEvent.VK_F4:
+			if (alt_pressed) {
+				System.exit(0);
+			}
+			break;
+		case KeyEvent.VK_F11:
+			toggleFullscreen();
+			break;
+		case KeyEvent.VK_ALT:
+			alt_pressed = true;
+			break;
 		default:
 			int k = puzzle.turn(key);
 			if (k != -1) {
@@ -189,6 +241,11 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		switch (e.getExtendedKeyCode()) {
+		case KeyEvent.VK_ALT:
+			alt_pressed = false;
+			break;
+		}
 	}
 
 	private int[] drag = new int[3];
@@ -212,8 +269,8 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 			repaint();
 			break;
 		case MouseEvent.BUTTON3:
-			puzzle.rotateEye(-2.0 * (x - drag[1]) / width, 2.0 * (y - drag[2])
-					/ height);
+			puzzle.rotateEye(-2.0 * (x - drag[1]) / getWidth(), 2.0
+					* (y - drag[2]) / getHeight());
 			repaint();
 			break;
 		}
