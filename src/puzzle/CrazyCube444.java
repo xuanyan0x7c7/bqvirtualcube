@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import model.MyPanel;
+import javax.swing.JComponent;
 
 import draw.BezierFacelet;
 import draw.Facelet;
@@ -53,10 +53,9 @@ public class CrazyCube444 extends Puzzle {
 			new Vertex(0, 0, 1), new Vertex(0, 0, -1), new Vertex(0, 1, 0),
 			new Vertex(0, -1, 0), new Vertex(1, 0, 0), new Vertex(-1, 0, 0) };
 
-	public CrazyCube444(MyPanel panel) {
-		super("Crazy Cube 444");
+	public CrazyCube444(JComponent panel) {
+		super(panel, "Crazy Cube 444");
 		size = 4;
-		this.panel = panel;
 		facelets = 144;
 		facelet = new Facelet[6][24];
 		setEye(new Vertex(5, 3, 4));

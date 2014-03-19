@@ -5,11 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
+import javax.swing.JComponent;
+
 import draw.Facelet;
 import draw.PolygonFacelet;
 import draw.Vertex;
-
-import model.MyPanel;
 
 public class Pyraminx extends Puzzle {
 
@@ -95,14 +95,13 @@ public class Pyraminx extends Puzzle {
 			new Vertex(-1, 1, 1).normalize(),
 			new Vertex(-1, 1, -1).normalize(), new Vertex(1, -1, 1).normalize() };
 
-	public Pyraminx(MyPanel panel) {
+	public Pyraminx(JComponent panel) {
 		this(panel, 3);
 	}
 
-	public Pyraminx(MyPanel panel, int size) {
-		super(size + "*" + size + " Pyraminx");
+	public Pyraminx(JComponent panel, int size) {
+		super(panel, size + "*" + size + " Pyraminx");
 		minimum_size = 3;
-		this.panel = panel;
 		this.size = size;
 		facelets = 4 * size * size;
 		facelet = new PolygonFacelet[4][size * size];

@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import model.MyPanel;
+import javax.swing.JComponent;
 
 import draw.Facelet;
 import draw.PolygonFacelet;
@@ -18,7 +18,6 @@ public class Megaminx extends Puzzle {
 			new Color(255, 160, 0), Color.BLUE, new Color(128, 128, 255),
 			new Color(224, 224, 0), new Color(255, 255, 64), Color.MAGENTA,
 			new Color(255, 128, 255), Color.GRAY };
-	private MyPanel panel;
 	private int minimum_size = 3;
 	private int shiftU, shiftD, shiftF, shiftB, shiftR, shiftDBL, shiftBR,
 			shiftDL, shiftBL, shiftDR, shiftL, shiftDBR;
@@ -120,13 +119,12 @@ public class Megaminx extends Puzzle {
 			new Vertex(0, -rphi, phi * rphi), new Vertex(0, rphi, -phi * rphi),
 			new Vertex(rphi, -phi * rphi, 0), new Vertex(-rphi, phi * rphi, 0) };
 
-	public Megaminx(MyPanel panel) {
+	public Megaminx(JComponent panel) {
 		this(panel, 3);
 	}
 
-	public Megaminx(MyPanel panel, int size) {
-		super("Megaminx");
-		this.panel = panel;
+	public Megaminx(JComponent panel, int size) {
+		super(panel, "Megaminx");
 		this.size = size;
 		facelets = 12 * (5 * size * size / 4);
 		facelet = new PolygonFacelet[12][5 * size * size / 4];
@@ -293,7 +291,7 @@ public class Megaminx extends Puzzle {
 					layer = size - layer;
 					++face;
 				}
-				twist(face, move[i] / 24 + 1, true, true);
+				twist(face, layer, true, true);
 			}
 		}
 		return this;

@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import model.MyPanel;
+import javax.swing.JComponent;
 
 import puzzle.Puzzle;
 
@@ -68,13 +68,12 @@ public class Cube extends Puzzle {
 			new Vertex(0, 0, 1), new Vertex(0, 0, -1), new Vertex(0, 1, 0),
 			new Vertex(0, -1, 0), new Vertex(1, 0, 0), new Vertex(-1, 0, 0) };
 
-	public Cube(MyPanel panel) {
+	public Cube(JComponent panel) {
 		this(panel, 3);
 	}
 
-	public Cube(MyPanel panel, int size) {
-		super(size + "*" + size + " Cube");
-		this.panel = panel;
+	public Cube(JComponent panel, int size) {
+		super(panel, size + "*" + size + " Cube");
 		this.size = size;
 		facelets = 6 * size * size;
 		facelet = new PolygonFacelet[6][size * size];

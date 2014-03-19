@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import puzzle.CrazyCube444;
@@ -25,6 +26,7 @@ import puzzle.Cube;
 import puzzle.Megaminx;
 import puzzle.Puzzle;
 import puzzle.Pyraminx;
+import puzzle.Skewb;
 import thread.MyTimer;
 import thread.StateThread;
 import thread.ThreadQueue;
@@ -74,6 +76,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 		puzzle_list.add(Cube.class);
 		puzzle_list.add(Pyraminx.class);
 		puzzle_list.add(Megaminx.class);
+		puzzle_list.add(Skewb.class);
 		puzzle_list.add(CrazyCube444.class);
 		createPuzzle(puzzle_list.get(0));
 		count = 0;
@@ -322,8 +325,8 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 	public void createPuzzle(Class<? extends Puzzle> puzzle_type) {
 		this.puzzle_type = puzzle_type;
 		try {
-			puzzle = puzzle_type.cast(puzzle_type.getConstructor(MyPanel.class)
-					.newInstance(this));
+			puzzle = puzzle_type.cast(puzzle_type.getConstructor(
+					JComponent.class).newInstance(this));
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -348,8 +351,9 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 	public void createPuzzle(Class<? extends Puzzle> puzzle_type, int size) {
 		this.puzzle_type = puzzle_type;
 		try {
-			puzzle = puzzle_type.cast(puzzle_type.getConstructor(MyPanel.class,
-					int.class).newInstance(this, puzzle_size = size));
+			puzzle = puzzle_type.cast(puzzle_type.getConstructor(
+					JComponent.class, int.class).newInstance(this,
+					puzzle_size = size));
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		} catch (SecurityException e) {

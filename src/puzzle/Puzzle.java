@@ -3,9 +3,9 @@ package puzzle;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-import utility.Util;
+import javax.swing.JComponent;
 
-import model.MyPanel;
+import utility.Util;
 
 import draw.Facelet;
 import draw.Vertex;
@@ -16,14 +16,15 @@ public abstract class Puzzle {
 	protected int size;
 	protected int facelets;
 	protected Facelet[] facelet_list = null;
-	protected MyPanel panel;
+	protected JComponent panel;
 	protected Vertex eye, axis_x, axis_y;
 	protected double facelet_ratio;
 	protected int default_size = 3;
 	protected int minimum_size = 2;
 	protected int maximum_size = 0x7fffffff;
 
-	public Puzzle(String name) {
+	public Puzzle(JComponent panel, String name) {
+		this.panel = panel;
 		this.name = name;
 	}
 
