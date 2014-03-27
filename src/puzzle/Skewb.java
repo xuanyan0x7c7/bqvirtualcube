@@ -194,7 +194,7 @@ public class Skewb extends Puzzle {
 	}
 
 	@Override
-	public int turn(int key) {
+	public int apply(int key) {
 		switch (key) {
 		case KeyEvent.VK_SEMICOLON:
 			return y;
@@ -239,11 +239,6 @@ public class Skewb extends Puzzle {
 	}
 
 	@Override
-	public boolean isShift(int layer) {
-		return false;
-	}
-
-	@Override
 	public boolean isEntirelyTwist(int layer) {
 		return layer >= 16;
 	}
@@ -255,10 +250,6 @@ public class Skewb extends Puzzle {
 		} else {
 			return l1 / 2 == l2 / 2;
 		}
-	}
-
-	@Override
-	public void shift(int layer) {
 	}
 
 	@Override

@@ -45,24 +45,31 @@ public abstract class Puzzle {
 			axis_x = new Vertex(-eye.y, eye.x, 0.0).normalize();
 			axis_y = eye.cross(axis_x).normalize();
 		}
+		double dist = eye.modulus();
+		axis_x.zoom(1 / dist);
+		axis_y.zoom(1 / dist);
 	}
 
 	public void setEye(Vertex eye, Vertex axis_x, Vertex axis_y) {
 		this.eye = new Vertex(eye);
-		this.axis_x = new Vertex(axis_x).normalize();
-		this.axis_y = new Vertex(axis_y).normalize();
+		double dist = eye.modulus();
+		this.axis_x = new Vertex(axis_x).normalize().zoom(1 / dist);
+		this.axis_y = new Vertex(axis_y).normalize().zoom(1 / dist);
 	}
 
 	public void zoom(double zoom) {
 		eye.zoom(zoom);
+		axis_x.zoom(1 / zoom);
+		axis_y.zoom(1 / zoom);
 	}
 
 	public void rotateEye(double x, double y) {
-		eye.rotate(axis_y, x * Math.PI / 2);
-		axis_x.rotate(axis_y, x * Math.PI / 2);
-		eye.rotate(axis_x, -y * Math.PI / 2);
-		axis_y.rotate(axis_x, -y * Math.PI / 2);
-		return;
+		double angle = Math.sqrt(x * x + y * y) * Math.PI / 2;
+		Vertex axis = new Vertex(axis_y).zoom(x)
+				.move(new Vertex(axis_x).zoom(-y)).normalize();
+		eye.rotate(axis, angle);
+		axis_x.rotate(axis, angle);
+		axis_y.rotate(axis, angle);
 	}
 
 	public int getDefaultSize() {
@@ -87,17 +94,20 @@ public abstract class Puzzle {
 		return this;
 	}
 
-	public abstract int turn(int key);
+	public abstract int apply(int key);
 
 	public abstract boolean isTwistLayer(int layer);
 
-	public abstract boolean isShift(int layer);
+	public boolean isShift(int layer) {
+		return false;
+	}
 
 	public abstract boolean isEntirelyTwist(int layer);
 
 	public abstract boolean isParallel(int l1, int l2);
 
-	public abstract void shift(int layer);
+	public void shift(int layer) {
+	}
 
 	public abstract Puzzle twist(int layer, boolean scramble);
 
@@ -148,7 +158,6 @@ public abstract class Puzzle {
 	}
 
 	protected void draw(Graphics2D g, double dx, double dy, double zoom_ratio) {
-		double eye_dist = eye.modulus();
 		double[] distance = new double[facelets];
 		for (int i = 0; i < facelets; ++i) {
 			distance[i] = Vertex.sqrDist(eye, facelet_list[i].center);
@@ -160,7 +169,7 @@ public abstract class Puzzle {
 		Util.sort(seq, distance);
 		for (int i = facelets; --i >= 0;) {
 			facelet_list[seq[i]].draw(g, eye, axis_x, axis_y, dx, dy,
-					zoom_ratio / eye_dist);
+					zoom_ratio);
 		}
 	}
 

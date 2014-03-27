@@ -298,7 +298,7 @@ public class Megaminx extends Puzzle {
 	}
 
 	@Override
-	public int turn(int key) {
+	public int apply(int key) {
 		switch (key) {
 		case KeyEvent.VK_SPACE:
 			return sReset;

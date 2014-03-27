@@ -346,7 +346,7 @@ public class CrazyCube444 extends Puzzle {
 	}
 
 	@Override
-	public int turn(int key) {
+	public int apply(int key) {
 		switch (key) {
 		case KeyEvent.VK_SEMICOLON:
 			return y;
@@ -415,11 +415,6 @@ public class CrazyCube444 extends Puzzle {
 	}
 
 	@Override
-	public boolean isShift(int layer) {
-		return false;
-	}
-
-	@Override
 	public boolean isEntirelyTwist(int layer) {
 		return layer % 10 > 7;
 	}
@@ -427,10 +422,6 @@ public class CrazyCube444 extends Puzzle {
 	@Override
 	public boolean isParallel(int l1, int l2) {
 		return l1 / 10 == l2 / 10;
-	}
-
-	@Override
-	public void shift(int layer) {
 	}
 
 	@Override

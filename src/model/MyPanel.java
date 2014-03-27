@@ -228,7 +228,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 			alt_pressed = true;
 			break;
 		default:
-			int k = puzzle.turn(key);
+			int k = puzzle.apply(key);
 			if (k != -1) {
 				if (timer.state == MyTimer.stop) {
 					break;
