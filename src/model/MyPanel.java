@@ -341,11 +341,6 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 			e.printStackTrace();
 		}
 		puzzle_size = puzzle.getDefaultSize();
-		relay_layer = relay_n = false;
-		count = 0;
-		timer.resetTimer();
-		timer.setPrefixString("");
-		changePuzzle();
 	}
 
 	public void createPuzzle(Class<? extends Puzzle> puzzle_type, int size) {
@@ -367,11 +362,6 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-		relay_layer = relay_n = false;
-		count = 0;
-		timer.resetTimer();
-		timer.setPrefixString("");
-		changePuzzle();
 	}
 
 	public boolean nextPuzzle() {
@@ -380,6 +370,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener,
 				createPuzzle(puzzle_type,
 						puzzle_size = puzzle.getBiggerSize(puzzle_size));
 				puzzle.preScramble().scramble();
+				System.out.println(relay_layer);
 				changePuzzle();
 				return true;
 			} else {
